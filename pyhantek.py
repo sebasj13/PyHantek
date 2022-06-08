@@ -1,12 +1,14 @@
+import array
 import time
 
+import matplotlib.pyplot as plt
 import numpy as np
 import usb.core
 
 from hantek_protocol import *
 
 
-class oscilloscope:
+class DSO1062D:
     def __init__(self):
 
         self.osc = usb.core.find(idVendor=VENDOR_ID, idProduct=PRODUCT_ID)
@@ -23,6 +25,7 @@ class oscilloscope:
             self.SYSTEM_STATUS = self.send_command("S\x02\x00\x01V")
             self.CH1 = self.oscilloscope_channel(0, self.SYSTEM_STATUS)
             self.CH2 = self.oscilloscope_channel(1, self.SYSTEM_STATUS)
+            self.CHANNEL_DICT = {1: self.CH1, 2: self.CH2}
             self.timebase = TIMEBASE_VALUE[self.SYSTEM_STATUS[165]]
             self.timebase_unit = TIMEBASE_UNIT[self.SYSTEM_STATUS[166]]
             self.time_offset = self.horizontal_position(self.SYSTEM_STATUS)
@@ -94,7 +97,7 @@ class oscilloscope:
     def stop_acquisition(self):
         self.send_command("S\x04\x00\x12\x00\x01j")
 
-    def read_sample_data(self, channel, scale=True):
+    def read_sample_data(self, channel=1, scale=True):
         def center_and_scale_data_around_zero(sample_data, channel):
 
             centered_data = []
@@ -118,6 +121,8 @@ class oscilloscope:
 
             return times
 
+        channel = self.settings.CHANNEL_DICT[channel]
+
         self.start_acquisition()
         self.update()
         self.send_command(
@@ -139,6 +144,48 @@ class oscilloscope:
 
             return times, scaled_data
 
+    def screenshot(self):
+        def _ReadAnswer(self, rcode):
+            r = None
+            while True:
+                r = self.osc.read(0x81, 1024 * 1024, 500)
+                chksum = sum(r[:-1]) & 0xFF
+                if chksum != r[-1]:
+                    print("BADCHKSM")
+                if r[3] == rcode:
+                    break
+                else:
+                    print("BADANSWER")
+            return r
+
+        self.send_command("S\x02\x00 u")
+        bmp = array.array("B")
+        while True:
+            d = _ReadAnswer(0xA0)
+            if d[4] == 0x01:
+                bmp = bmp + d[5:-1]
+            else:
+                break
+        img = np.frombuffer(bytearray(bmp), dtype=np.uint16).reshape(480, 800)
+        img = img.astype(np.uint8)
+        plt.imshow(img, interpolation="nearest")
+        plt.show()
+        return img
+
+    def plot(self, channel):
+
+        x, y = self.read_sample_data(channel)
+        fig, ax = plt.subplots(1, 1)
+        fig.set_size_inches(8, 4)
+        fig.set_dpi(150)
+        ax.invert_xaxis()
+        ax.grid()
+        ax.set_xlabel(f"Time in {self.timebase_unit}")
+        ax.set_ylabel(f"VOltage in {channel.volts_per_div_unit}")
+        ax.plot(x, y, ms=0.05, color="black")
+        plt.show()
+        return
+
     def update(self):
-        self.oscilloscope_settings.__init__()
+        self.settings.__init__()
         time.sleep(0.25)
