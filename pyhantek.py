@@ -85,6 +85,9 @@ class DSO1062D:
 
                 return position
 
+    def release(self):
+        usb.util.dispose_resources(self.osc)
+
     def send_command(self, command):
         self.osc.write(0x2, command)
 
@@ -113,7 +116,7 @@ class DSO1062D:
 
             return [i * scale + offset for i in centered_data]
 
-        def create_timescale(sample_data, channel):
+        def create_timescale(sample_data):
             maximum = self.timebase / 400 * len(sample_data)
             times = np.linspace(-2 * maximum, 0, len(sample_data))
             times += maximum
