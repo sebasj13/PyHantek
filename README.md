@@ -17,6 +17,7 @@ One you have these installed and cloned this repository or downloaded the files,
 ## Documentation
 
 <p align = "center">WORK IN PROGRESS</p>
+Many of the functions are taken from: <a href="https://github.com/titos-carrasco/DSO5102P-Python">DSO5102P-Python</a>
 
 
 ## Contributing
