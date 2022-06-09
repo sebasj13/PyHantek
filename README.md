@@ -12,7 +12,7 @@ The prerequisites for this library are <a href="https://github.com/pyusb/pyusb">
 pip install pyusb numpy
 ```
 One you have these installed and cloned this repository or downloaded the files, you need to install the drivers for the oscilloscope. Connect the oscilloscope via USB, then start Zadig, which can be downloaded from <a href="https://zadig.akeo.ie/">here</a>. After installion the WinUSB driver, you can use this library. 
-<br><b>NOTE: This step breaks the functionality of the included software (TTScope).
+<br><b>NOTE: This step breaks the functionality of the included software (TTScope).</br>
 
 ## Documentation
 
