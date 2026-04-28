@@ -9,7 +9,7 @@ All my testing was done on a Voltcraft DSO-1062D, however this protocol should a
 The prerequisites for this library are <a href="https://github.com/pyusb/pyusb">PyUSB</a> and <a href="https://github.com/numpy/numpy">numpy</a>. These can be installed via:
 
 ```console
-pip install pyusb numpy
+pip install pyusb numpy matplotlib Pillow
 ```
 One you have these installed and cloned this repository or downloaded the files, you need to install the drivers for the oscilloscope. Connect the oscilloscope via USB, then start Zadig, which can be downloaded from <a href="https://zadig.akeo.ie/">here</a>. After installion the WinUSB driver, you can use this library. 
 <b><br>NOTE: This step breaks the functionality of the included software (TTScope).</br></b>
@@ -20,7 +20,5 @@ One you have these installed and cloned this repository or downloaded the files,
 Many of the functions are taken from: <a href="https://github.com/titos-carrasco/DSO5102P-Python">DSO5102P-Python</a>
 
 
-## Contributing
-Any help us greatly appreciated! Sources that document the HANTEK protocol can be found <a href="https://elinux.org/Das_Oszi_Protocol">here</a> and <a href="https://www.mikrocontroller.net/articles/Datei:SysDATA_v1.0.zip">here</a>.
-
-
+## References
+Sources that document the HANTEK protocol can be found <a href="https://elinux.org/Das_Oszi_Protocol">here</a> and <a href="https://www.mikrocontroller.net/articles/Datei:SysDATA_v1.0.zip">here</a>.
